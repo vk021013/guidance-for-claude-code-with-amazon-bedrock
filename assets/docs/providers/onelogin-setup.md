@@ -36,11 +36,10 @@ Under the **Configuration** tab:
 Under the **SSO** tab:
 
 - **Application Type**: `Web`
-- **Authentication Method**: `POST` (or `Basic` — either works)
-- Note your **Client ID** — you will need it during `ccwb init`
-- Note your **Client Secret** — only needed if using confidential client mode
+- **Authentication Method**: `none` — this enables PKCE-only (public client) mode
+- Note your **Client ID** — this is the only credential you need
 
-> **Public client (PKCE) is recommended.** OneLogin supports PKCE natively for native/CLI applications. No client secret is required.
+> **No client secret required.** Setting Authentication Method to `none` enables the OAuth 2.0 Authorization Code + PKCE flow. The credential provider sends only the `client_id` and PKCE `code_verifier` during token exchange — no secret is ever stored or distributed to end users.
 
 ---
 
@@ -71,6 +70,8 @@ If you want group-based quota monitoring:
 |---|---|---|
 | **OneLogin Domain** | Your subdomain | `amagi-media-labs.onelogin.com` |
 | **Client ID** | From SSO tab | `abc123def456...` |
+
+> No client secret needed — the app uses PKCE (public client mode).
 
 ---
 
