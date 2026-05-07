@@ -70,6 +70,14 @@ PROVIDER_CONFIGS = {
         "response_type": "code",
         "response_mode": "query",
     },
+    "onelogin": {
+        "name": "OneLogin",
+        "authorize_endpoint": "/oidc/2/auth",
+        "token_endpoint": "/oidc/2/token",
+        "scopes": "openid profile email",
+        "response_type": "code",
+        "response_mode": "query",
+    },
 }
 
 
@@ -312,6 +320,8 @@ class MultiProviderAuth:
             elif hostname_lower.endswith(".amazoncognito.com") or hostname_lower == "amazoncognito.com":
                 # Cognito User Pool domain format: my-domain.auth.{region}.amazoncognito.com
                 return "cognito"
+            elif hostname_lower.endswith(".onelogin.com") or hostname_lower == "onelogin.com":
+                return "onelogin"
             else:
                 # Fail with clear error for unknown providers
                 raise ValueError(

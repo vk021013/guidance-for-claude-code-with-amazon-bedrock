@@ -360,6 +360,7 @@ class DeployCommand(Command):
                     "auth0": "bedrock-auth-auth0.yaml",
                     "azure": "bedrock-auth-azure.yaml",
                     "cognito": "bedrock-auth-cognito-pool.yaml",
+                    "onelogin": "bedrock-auth-onelogin.yaml",
                 }
 
                 template_file = template_map.get(provider_type, "bedrock-auth-okta.yaml")
@@ -429,6 +430,13 @@ class DeployCommand(Command):
                             f"CognitoUserPoolId={profile.cognito_user_pool_id}",
                             f"CognitoUserPoolClientId={profile.client_id}",
                             f"CognitoUserPoolDomain={cognito_domain}",
+                        ]
+                    )
+                elif provider_type == "onelogin":
+                    params.extend(
+                        [
+                            f"OneLoginDomain={profile.provider_domain}",
+                            f"OneLoginClientId={profile.client_id}",
                         ]
                     )
 
@@ -530,6 +538,14 @@ class DeployCommand(Command):
                                 f"CognitoUserPoolDomain={profile.distribution_idp_domain}",
                                 f"CognitoClientId={profile.distribution_idp_client_id}",
                                 f"CognitoClientSecretArn={profile.distribution_idp_client_secret_arn}",
+                            ]
+                        )
+                    elif profile.distribution_idp_provider == "onelogin":
+                        params.extend(
+                            [
+                                f"OneLoginDomain={profile.distribution_idp_domain}",
+                                f"OneLoginClientId={profile.distribution_idp_client_id}",
+                                f"OneLoginClientSecretArn={profile.distribution_idp_client_secret_arn}",
                             ]
                         )
 
@@ -963,6 +979,7 @@ class DeployCommand(Command):
                     "auth0": "bedrock-auth-auth0.yaml",
                     "azure": "bedrock-auth-azure.yaml",
                     "cognito": "bedrock-auth-cognito-pool.yaml",
+                    "onelogin": "bedrock-auth-onelogin.yaml",
                 }
                 template_file = template_map.get(provider_type, "bedrock-auth-okta.yaml")
                 template = project_root / "deployment" / "infrastructure" / template_file
@@ -987,6 +1004,8 @@ class DeployCommand(Command):
                         f"CognitoUserPoolClientId={profile.client_id}",
                         f"CognitoUserPoolDomain={cognito_domain}",
                     ])
+                elif provider_type == "onelogin":
+                    params.extend([f"OneLoginDomain={profile.provider_domain}", f"OneLoginClientId={profile.client_id}"])
                 params.extend([
                     f"IdentityPoolName={profile.identity_pool_name}",
                     f"AllowedBedrockRegions={','.join(bedrock_regions)}",

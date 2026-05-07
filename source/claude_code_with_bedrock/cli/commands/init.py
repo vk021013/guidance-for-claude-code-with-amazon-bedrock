@@ -338,8 +338,9 @@ class InitCommand(Command):
                 instruction=(
                     "(e.g., company.okta.com, company.auth0.com, "
                     "login.microsoftonline.com/{tenant-id}/v2.0, "
-                    "my-app.auth.us-east-1.amazoncognito.com, or "
-                    "my-app.auth-fips.us-gov-west-1.amazoncognito.com for GovCloud)"
+                    "my-app.auth.us-east-1.amazoncognito.com, "
+                    "my-app.auth-fips.us-gov-west-1.amazoncognito.com for GovCloud, or "
+                    "company.onelogin.com)"
                 ),
                 default=config.get("okta", {}).get("domain", ""),
             ).ask()
@@ -384,6 +385,8 @@ class InitCommand(Command):
                     elif hostname_lower.startswith("cognito-idp.") and ".amazonaws.com" in hostname_lower:
                         # Handle cognito-idp.{region}.amazonaws.com format (commercial and GovCloud)
                         provider_type = "cognito"
+                    elif hostname_lower.endswith(".onelogin.com") or hostname_lower == "onelogin.com":
+                        provider_type = "onelogin"
                     elif questionary.confirm("Is this a custom domain for AWS Cognito User Pool?", default=False).ask():
                         provider_type = "cognito"
             except Exception:
@@ -402,6 +405,7 @@ class InitCommand(Command):
                         questionary.Choice("Microsoft Entra ID / Azure AD", value="azure"),
                         questionary.Choice("Auth0", value="auth0"),
                         questionary.Choice("AWS Cognito User Pool", value="cognito"),
+                        questionary.Choice("OneLogin", value="onelogin"),
                     ],
                     instruction="(Used to select the correct CloudFormation template)",
                 ).ask()
@@ -964,6 +968,7 @@ class InitCommand(Command):
                 questionary.Choice("Azure AD / Entra ID", value="azure"),
                 questionary.Choice("Auth0", value="auth0"),
                 questionary.Choice("AWS Cognito User Pool", value="cognito"),
+                questionary.Choice("OneLogin", value="onelogin"),
             ]
 
             idp_provider = questionary.select(

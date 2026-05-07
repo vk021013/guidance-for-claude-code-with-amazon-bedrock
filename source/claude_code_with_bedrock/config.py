@@ -153,6 +153,8 @@ class Profile:
                             data["provider_type"] = "azure"
                         elif hostname_lower.endswith(".amazoncognito.com") or hostname_lower == "amazoncognito.com":
                             data["provider_type"] = "cognito"
+                        elif hostname_lower.endswith(".onelogin.com") or hostname_lower == "onelogin.com":
+                            data["provider_type"] = "onelogin"
                 except Exception:
                     pass  # Leave provider_type unset if parsing fails
 
