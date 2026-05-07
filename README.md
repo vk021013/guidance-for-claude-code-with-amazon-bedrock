@@ -6,7 +6,7 @@ This guidance provides enterprise deployment patterns for Claude Code and Claude
 
 ### For Organizations
 
-- **Enterprise IdP Integration**: Leverage existing OIDC identity providers (Okta, Azure AD, Auth0, etc.)
+- **Enterprise IdP Integration**: Leverage existing OIDC identity providers (Okta, Azure AD, Auth0, OneLogin, etc.)
 - **AWS SSO / IAM Identity Center**: Native AWS identity path for teams already using IAM Identity Center — no external IdP required
 - **Centralized Access Control**: Manage Claude Code access through your identity provider
 - **No API Key Management**: Eliminate the need to distribute or rotate long-lived credentials
@@ -44,7 +44,7 @@ This guidance provides enterprise deployment patterns for Claude Code and Claude
 
 ## Quick Start
 
-This guidance integrates Claude Code with your existing OIDC identity provider (Okta, Azure AD, Auth0, or Cognito User Pools) to provide federated access to Amazon Bedrock.
+This guidance integrates Claude Code with your existing OIDC identity provider (Okta, Azure AD, Auth0, OneLogin, or Cognito User Pools) to provide federated access to Amazon Bedrock.
 
 ### What You Need
 
@@ -136,13 +136,13 @@ This guidance supports three identity paths. All paths deliver per-user identity
 
 | Mode | `ccwb init` choice | Identity Source | Session Length | Quota Enforcement | Best For |
 |------|--------------------|----------------|----------------|-------------------|----------|
-| **External IdP (OIDC)** | `OIDC / Direct IdP` | Okta, Azure AD, Auth0, Cognito User Pools JWT claims | Refresh token lifetime | ✅ Full | Orgs with an existing enterprise IdP |
+| **External IdP (OIDC)** | `OIDC / Direct IdP` | Okta, Azure AD, Auth0, OneLogin, Cognito User Pools JWT claims | Refresh token lifetime | ✅ Full | Orgs with an existing enterprise IdP |
 | **AWS IAM Identity Center** | `AWS IAM Identity Center` | `AWSReservedSSO_*` IAM role ARN (email + permission set) | Up to 90 days (recommended: 7 days) | ❌ Not available | Orgs on native AWS identity, or where OIDC localhost callback is blocked |
 | **None** | `None` | IAM user ARN or hashed role principal | AWS credential TTL | ❌ Not available | Internal tools / analytics-only deployments |
 
 **Choosing a path:**
 
-- Use **External IdP (OIDC)** when you need full quota enforcement, rich user attribution (department, team, cost centre from JWT claims), and have an OIDC provider (Okta, Azure AD, Auth0, or Cognito).
+- Use **External IdP (OIDC)** when you need full quota enforcement, rich user attribution (department, team, cost centre from JWT claims), and have an OIDC provider (Okta, Azure AD, Auth0, OneLogin, or Cognito).
 - Use **AWS IAM Identity Center** when your team already uses IAM IDC, or when corporate policies block `localhost:8400`, or when you want sessions up to 7 days without browser re-prompts. See [IAM Identity Center Setup Guide](assets/docs/providers/iam-identity-center-setup.md).
 - Use **None** when deploying the observability/analytics stack only, or when users already have IAM access to Bedrock and need no additional authentication layer.
 
@@ -172,7 +172,7 @@ For deployment patterns and best practices, see the [Claude Code deployment patt
 
 **OIDC Provider Requirements:**
 
-- Existing OIDC identity provider (Okta, Azure AD, Auth0, etc.)
+- Existing OIDC identity provider (Okta, Azure AD, Auth0, OneLogin, etc.)
 - Ability to create OIDC applications
 - Redirect URI support for `http://localhost:8400/callback`
 
@@ -329,7 +329,7 @@ After building packages, you can share them with users in three ways:
 | --------------------- | ---------------------- | ------------------------------ |
 | **Manual Sharing**    | Any size team          | None                           |
 | **Presigned S3 URLs** | Automated distribution | None                           |
-| **Landing Page**      | Self-service portal    | IdP (Okta/Azure/Auth0/Cognito) |
+| **Landing Page**      | Self-service portal    | IdP (Okta/Azure/Auth0/OneLogin/Cognito) |
 
 **Manual Sharing:** Zip the `dist/` folder and share via email or internal file sharing. No additional infrastructure required.
 
@@ -426,6 +426,7 @@ See [Analytics Guide](assets/docs/ANALYTICS.md) for SQL queries on historical da
 - [Okta](assets/docs/providers/okta-setup.md)
 - [Microsoft Entra ID (Azure AD)](assets/docs/providers/microsoft-entra-id-setup.md)
 - [Auth0](assets/docs/providers/auth0-setup.md)
+- [OneLogin](assets/docs/providers/onelogin-setup.md)
 
 ## License
 
